@@ -13,16 +13,6 @@
             height: 100%;
             background-color: rgba(0,0,0,0);
         }
-
-        .header {
-            background-color: #4CABFF;
-            color: #fff;
-            width: 100%;
-            height: 44px;
-            font-size: 20px;
-            line-height: 44px;
-            text-align: center;
-        }
         .qrcode-box {
             width: 250px;
             height: 250px;
@@ -94,10 +84,6 @@
 </head>
 
 <body>
-    <!-- 头部导航条 -->
-    <div id="header" class="header">
-        APICloud 二维码功能开发 DEMO
-    </div>
     <!-- 二维码扫描框 -->
     <div id="qrcode-box" class="qrcode-box">
         <span></span>
@@ -110,8 +96,6 @@
 <script type="text/javascript">
 
     apiready = function() {
-        var eHeader = $api.byId('header');
-        $api.fixStatusBar(eHeader); // 顶部header的沉浸式修复
 
         fnShowQRScannerBox();
     }

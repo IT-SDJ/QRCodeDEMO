@@ -8,22 +8,63 @@
     <title>二维码主页面</title>
     <link rel="stylesheet" type="text/css" href="./css/api.css" />
     <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
 
+        .header {
+            background-color: #4CABFF;
+            color: #fff;
+            width: 100%;
+            height: 44px;
+            font-size: 20px;
+            line-height: 44px;
+            text-align: center;
+        }
+
+        .button {
+            width: 240px;
+            height: 60px;
+            margin: 45% auto;
+            background-color: #E04B4C;
+            color: #fff;
+            font-size: 20px;
+            line-height: 60px;
+            text-align: center;
+            border-radius: 5px;
+        }
     </style>
 </head>
-
 <body>
+    <!-- 头部导航条 -->
+    <div id="header" class="header">APICloud 二维码功能开发 DEMO</div>
+    <div class="button" tapmode="" onclick="fnOpenQRCode();">打开二维码扫描</div>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
 <script type="text/javascript">
+
+    var FNScanner;  // 二维码模块对象
     apiready = function() {
-        fnInitQRCode();
+        var eHeader = $api.byId('header');
+        $api.fixStatusBar(eHeader); // 顶部header的沉浸式修复
+
+        FNScanner = api.require('FNScanner');
+        api.addEventListener({ // 通知当前本模块app进入后台。此时模块会进行一些资源的暂停存储操作，防止照相机回来之后黑屏
+            name:'pause'
+        }, function(ret, err){
+            FNScanner.onPause();
+        });
+
+        api.addEventListener({ //通知当前本模块app进入回到前台。此时模块会进行一些资源的恢复操作，防止照相机回来之后黑屏
+            name:'resume'
+        }, function(ret, err){
+            FNScanner.onResume();
+        });
     };
 
+    function fnOpenQRCode() {  // 初始化二维码功能模块
 
-    function fnInitQRCode() {  // 初始化二维码功能模块
-
-        FNScanner = api.require('FNScanner');  // 获取模块
         FNScanner.openView({  // 打开二维码页面
             rect: { //扫描器的位置及尺寸，在安卓平台宽高比须跟屏幕宽高比一致，否则摄像头可视区域的图像可能出现少许变形；w和h属性最好使用api.winWidth和api.winHeight,这样不会导致变形，也不会出现手机必须要在一定的距离上才能扫描出来的现象
                 x: 0,
@@ -42,9 +83,16 @@
             if (ret) {
                 if ('show' == ret.eventType) { //模块加载展现事件
                     //打开自定义的frame页面
-                    fnOpenSubFrame();
+                    setTimeout(function(){  //延迟加载，防止异步逻辑导致页面样式加载失败
+                      fnOpenSubFrame();
+                    },1000);
+
                 }
                 else if(ret.eventType == "success") { // 模块扫描成功事件
+                    api.closeFrame({ // 关闭扫描样式页
+                        name: 'qrcode_frm'
+                    });
+                    FNScanner.closeView(); // 关闭二维码模块
                     api.alert({
                         title: '扫描结果',
                         msg: ret.content,
@@ -73,7 +121,6 @@
         });
 
     }
-
 </script>
 
 </html>

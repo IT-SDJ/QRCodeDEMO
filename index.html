@@ -18,19 +18,31 @@
             color: #fff;
             width: 100%;
             height: 44px;
-            font-size: 20px;
+            font-size: 16px;
             line-height: 44px;
             text-align: center;
         }
 
-        .button {
+        .button-normal {
             width: 240px;
-            height: 60px;
-            margin: 45% auto;
+            height: 50px;
+            margin: 45% auto auto;
             background-color: #E04B4C;
             color: #fff;
-            font-size: 20px;
-            line-height: 60px;
+            font-size: 16px;
+            line-height: 50px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .button-custom {
+            width: 240px;
+            height: 50px;
+            margin: 50px auto auto;
+            background-color: #E04B4C;
+            color: #fff;
+            font-size: 16px;
+            line-height: 50px;
             text-align: center;
             border-radius: 5px;
         }
@@ -39,7 +51,8 @@
 <body>
     <!-- 头部导航条 -->
     <div id="header" class="header">APICloud 二维码功能开发 DEMO</div>
-    <div class="button" tapmode="" onclick="fnOpenQRCode();">打开二维码扫描</div>
+    <div class="button-normal" tapmode="" onclick="fnOpenNormalQRCode();">打开普通二维码扫描</div>
+    <div class="button-custom" tapmode="" onclick="fnOpenCustomQRCode();">打开自定义样式的二维码扫描</div>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
 <script type="text/javascript">
@@ -63,7 +76,26 @@
         });
     };
 
-    function fnOpenQRCode() {  // 初始化二维码功能模块
+    function fnOpenNormalQRCode() {  // 打开默认的二维码模块
+      FNScanner.openScanner({
+          autorotation: true
+      }, function(ret, err) {
+          if (ret) {
+              if(ret.eventType == "success") { // 模块扫描成功事件
+                  api.alert({
+                      title: '扫描结果',
+                      msg: ret.content,
+                  }, function(ret, err){
+
+                  });
+              }
+          } else {
+              alert(JSON.stringify(err));
+          }
+      });
+    }
+
+    function fnOpenCustomQRCode() {  // 打开自定义样式的二维码功能模块
 
         FNScanner.openView({  // 打开二维码页面
             rect: { //扫描器的位置及尺寸，在安卓平台宽高比须跟屏幕宽高比一致，否则摄像头可视区域的图像可能出现少许变形；w和h属性最好使用api.winWidth和api.winHeight,这样不会导致变形，也不会出现手机必须要在一定的距离上才能扫描出来的现象
@@ -78,21 +110,15 @@
                 w: 250,
                 h: 250
             },
-            sound: 'widget://res/qrcode.wav'
+            sound: 'widget://res/qrcode.wav'  // 自定义设置扫描后的声音
         }, function(ret, err) {
             if (ret) {
                 if ('show' == ret.eventType) { //模块加载展现事件
-                    //打开自定义的frame页面
-                    setTimeout(function(){  //延迟加载，防止异步逻辑导致页面样式加载失败
-                      fnOpenSubFrame();
-                    },1000);
 
                 }
                 else if(ret.eventType == "success") { // 模块扫描成功事件
-                    api.closeFrame({ // 关闭扫描样式页
-                        name: 'qrcode_frm'
-                    });
-                    FNScanner.closeView(); // 关闭二维码模块
+                    fnCloseCustomQRCode();
+
                     api.alert({
                         title: '扫描结果',
                         msg: ret.content,
@@ -105,6 +131,18 @@
                 }
             }
         })
+
+        //打开自定义的frame页面
+        setTimeout(function(){
+          fnOpenSubFrame();
+        },500);
+    }
+
+    function fnCloseCustomQRCode() {
+        api.closeFrame({ // 关闭扫描样式页
+            name: 'qrcode_frm'
+        });
+        FNScanner.closeView(); // 关闭二维码模块
     }
 
     function fnOpenSubFrame() { // 打开二维码自定义的frame样式框页面
@@ -119,7 +157,6 @@
             bounces: false,
             bgColor: 'rgba(0,0,0,0)',
         });
-
     }
 </script>
 

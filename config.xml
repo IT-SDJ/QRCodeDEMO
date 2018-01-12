@@ -1,0 +1,31 @@
+ <widget id="A6060229117583"  version="0.0.1">
+    <name>二维码功能开发</name>
+    <description>
+        APP开发技术_二维码功能开发.
+    </description>
+    <author email="developer@apicloud.club" href="http://www.apicloud.com">
+        SDJ
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <preference name="pageBounce" value="false"/>
+	<preference name="appBackground" value="rgba(0,0,0,0.0)"/>
+	<preference name="windowBackground" value="rgba(0,0,0,0.0)"/>
+	<preference name="frameBackgroundColor" value="rgba(0,0,0,0.0)"/>
+	<preference name="hScrollBarEnabled" value="true"/>
+	<preference name="vScrollBarEnabled" value="true"/>
+	<preference name="autoLaunch" value="true"/>
+	<preference name="fullScreen" value="false"/>
+	<preference name="autoUpdate" value="true" />
+	<preference name="smartUpdate" value="false" />
+	<preference name="debug" value="true"/>
+	<preference name="statusBarAppearance" value="true"/>
+	<permission name="readPhoneState" />
+	<permission name="camera" />
+	<permission name="record" />
+	<permission name="location" />
+	<permission name="fileSystem" />
+	<permission name="internet" />
+	<permission name="bootCompleted" />
+	<permission name="hardware" />
+</widget>

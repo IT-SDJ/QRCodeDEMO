@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>二维码主页面</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fnInitQRCode();
+    };
+
+
+    function fnInitQRCode() {  // 初始化二维码功能模块
+
+        FNScanner = api.require('FNScanner');  // 获取模块
+        FNScanner.openView({  // 打开二维码页面
+            rect: { //扫描器的位置及尺寸，在安卓平台宽高比须跟屏幕宽高比一致，否则摄像头可视区域的图像可能出现少许变形；w和h属性最好使用api.winWidth和api.winHeight,这样不会导致变形，也不会出现手机必须要在一定的距离上才能扫描出来的现象
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            rectOfInterest: { // （可选项）在扫码区域上的扫码识别区域，仅在iOS平台有效
+                x: (api.winWidth-250)/2,
+                y: (api.winHeight-250)/2,
+                w: 250,
+                h: 250
+            },
+            sound: 'widget://res/qrcode.wav'
+        }, function(ret, err) {
+            if (ret) {
+                if ('show' == ret.eventType) { //模块加载展现事件
+                    //打开自定义的frame页面
+                    fnOpenSubFrame();
+                }
+                else if(ret.eventType == "success") { // 模块扫描成功事件
+                    api.alert({
+                        title: '扫描结果',
+                        msg: ret.content,
+                    }, function(ret, err){
+
+                    });
+
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            }
+        })
+    }
+
+    function fnOpenSubFrame() { // 打开二维码自定义的frame样式框页面
+        api.openFrame({
+            name: 'qrcode_frm',
+            url: './html/qrcode_frm.html',
+            rect: {  // 采用 margin相对布局
+                marginTop: 0,
+                h: 'auto',
+                w: 'auto'
+            },
+            bounces: false,
+            bgColor: 'rgba(0,0,0,0)',
+        });
+
+    }
+
+</script>
+
+</html>
